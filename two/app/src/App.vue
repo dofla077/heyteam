@@ -137,6 +137,7 @@ export default {
       type === 'default'
           ? this.defaultItems.splice(this.defaultItems.indexOf(elt), 1)
           : this.rightItems.splice(this.rightItems.indexOf(elt), 1);
+      this.clearFocus()
     }
   }
 }

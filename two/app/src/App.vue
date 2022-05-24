@@ -1,76 +1,142 @@
 <template>
   <div id="app">
     <div class="row">
-      <div class="col-6">
-        <ul class="default">
-          <li class="d-item" v-for="item in defaultItems" :key="item" @blur="getfocus(item)">
 
-            <div class="card text-dark mb-2" :class="getColor(item)" style="max-width: 18rem;">
-              <button type="button" class="close" @click="removeItem(item)" aria-label="Close">X</button>
-
-              <div class="card-body">
-                <p class="card-text">{{ item }}</p>
-              </div>
-            </div>
-
+      <div class="col-4 item-group">
+        <button class="add-btn" type="button" @click="addItem('default')">+</button>
+        <ul class="item">
+          <li class="d-item" v-for="item in defaultItems" :key="item.color">
+            <Item :color="item.name" :item="item" type="default"
+                  @focusField="focusField"
+                  @removeItem="removeItem"/>
           </li>
         </ul>
       </div>
 
-      <div class="col-2">
-        <ul>
-          <li v-for="action in btnActions" :key="action">
-            <button class="actions">{{ action }}</button>
+      <Actions :item="selected" @toMove="toMove" @toCopie="toCopie" @toDelete="toDelete" :is-disabled="isDisabled"/>
+
+      <div class="col-4 item-group">
+        <button class="add-btn" type="button" @click="addItem('right')">+</button>
+        <ul class="item">
+          <li class="d-item" v-for="item in rightItems" :key="item.color">
+            <Item :color="item.name" @focusField="focusField" :item="item" type="right"
+                  @removeItem="removeItem"/>
           </li>
         </ul>
       </div>
 
     </div>
+
   </div>
 </template>
 
 <script>
+
+import Actions from "@/components/Actions";
+import Item from "@/components/Item";
 
 export default {
   name: 'App',
   data() {
     return {
       defaultItems: [
-        'Blue',
-        'Orange',
-        'Green',
-        'Grey',
-        '#000000',
+        {name: 'Blue', color: 'blue'},
+        {name: 'Orange', color: 'orange'},
+        {name: 'Green', color: 'green'},
+        {name: '#000000', color: '#000000'},
       ],
-      btnActions: [
-        'Move',
-        'Delete',
-        'Copie',
-        'Reference',
-      ]
+      rightItems: [
+        {name: 'Grey', color: 'grey'},
+      ],
+      selected: {},
+      copied: [],
+      focusPosition: '',
+      isDisabled: true
     }
   },
-  components: {},
+  components: {Item, Actions},
   methods: {
-    getColor(color) {
-      let booColor = {
-        Blue: 'bg-primary',
-        Orange: 'bg-warning',
-        Green: 'bg-success',
-        Grey: 'bg-light',
+    /**
+     *
+     */
+    toMove() {
+      if (this.rightItems.length < 6 && this.focusPosition === 'default') {
+        this.rightItems.push(this.selected)
+        this.defaultItems.splice(this.defaultItems.indexOf(this.selected), 1)
+      } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
+        this.defaultItems.push(this.selected)
+        this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
+      } else {
+        alert('Maximum of 6 items')
       }
-
-      return booColor[color] ? booColor[color] : 'bg-dark'
+      this.clearFocus()
     },
-
-    getfocus(elt) {
-      console.log(elt)
+    /**
+     *
+     */
+    clearFocus() {
+      this.selected = null
+      this.focusPosition = null
+      this.isDisabled = true
     },
-    removeItem(elt) {
-      console.log(this)
-      console.log(elt)
-      this.defaultItems.splice(this.defaultItems.indexOf(elt), 1);
+    /**
+     *
+     */
+    toCopie() {
+     // let copiedUser = Object.assign({}, this.selected);
 
+      if (this.rightItems.length < 6 && this.focusPosition === 'default') {
+        this.rightItems.push(this.selected)
+      } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
+        this.defaultItems.push(this.selected)
+      } else {
+        alert('Maximum of 6 items')
+      }
+      this.clearFocus()
+    },
+    /**
+     *
+     */
+    toDelete() {
+      this.focusPosition === 'default'
+          ? this.defaultItems.splice(this.defaultItems.indexOf(this.selected), 1)
+          : this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
+      this.clearFocus()
+    },
+    /**
+     *
+     * @param elt
+     * @param type
+     */
+    focusField(elt, type) {
+      this.selected = elt;
+      this.focusPosition = type
+      this.isDisabled = false
+    },
+    /**
+     *
+     * @param type
+     */
+    addItem(type) {
+      let item = prompt('Add Item');
+
+      if (this.defaultItems.length < 6 && type === 'default') {
+          this.defaultItems.push({name: item, color: item});
+      } else if (this.rightItems.length < 6 && type === 'right') {
+          this.rightItems.push({name: item, color: item});
+      } else {
+        alert('Maximum of 6 items')
+      }
+    },
+    /**
+     *
+     * @param type
+     * @param elt
+     */
+    removeItem(type, elt) {
+      type === 'default'
+          ? this.defaultItems.splice(this.defaultItems.indexOf(elt), 1)
+          : this.rightItems.splice(this.rightItems.indexOf(elt), 1);
     }
   }
 }
@@ -86,39 +152,31 @@ export default {
   margin-top: 60px;
 }
 
-.default {
+.add-btn {
+  position: relative;
+  left: 18.5em;
+  border-radius: 16px;
+  bottom: 9px;
+  background-color: #F48138;
+  color: white;
+  border: none;
+}
+
+.item-group {
   background-color: #333F50;
 }
+
 li {
   list-style: none;
 }
-.default > li {
+
+.item > li {
   display: inline-block;
   padding: 10px;
 }
 
-.card {
-  display: inline-block;
+.actions > li {
+  padding: 5px;
 }
 
-.card-body {
-  padding: 30px;
-}
-
-.card-text {
-  border: 1px solid black;
-  margin-top: 36px;
-  padding-left: 20px;
-  padding-right: 20px;
-  background-color: white;
-}
-
-.close {
-  left: 115px;
-  white-space: normal;
-  position: absolute;
-  top: 4px;
-  border: 1px solid #BCBCBC;
-  color: #BCBCBC;
-}
 </style>

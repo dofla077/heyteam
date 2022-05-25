@@ -13,7 +13,12 @@
         </ul>
       </div>
 
-      <Actions :item="selected" @toMove="toMove" @toCopie="toCopie" @toDelete="toDelete" :is-disabled="isDisabled"/>
+      <Actions :item="selected"
+               @toMove="toMove"
+               @toCopy="toCopy"
+               @toReference="toReference"
+               @toDelete="toDelete"
+               :is-disabled="isDisabled"/>
 
       <div class="col-4 item-group">
         <button class="add-btn" type="button" @click="addItem('right')">+</button>
@@ -51,7 +56,8 @@ export default {
       selected: {},
       copied: [],
       focusPosition: '',
-      isDisabled: true
+      isDisabled: true,
+      alertMsg: 'Maximum of 6 items'
     }
   },
   components: {Item, Actions},
@@ -82,9 +88,7 @@ export default {
     /**
      *
      */
-    toCopie() {
-     // let copiedUser = Object.assign({}, this.selected);
-
+    toReference() {
       if (this.rightItems.length < 6 && this.focusPosition === 'default') {
         this.rightItems.push(this.selected)
       } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
@@ -92,6 +96,27 @@ export default {
       } else {
         alert('Maximum of 6 items')
       }
+      this.clearFocus()
+    },
+
+    toCopy() {
+      if (this.rightItems.length > 6 || this.defaultItems.length > 6) {
+        alert(this.alertMsg)
+      }
+
+      if (this.focusPosition === 'default') {
+        this.rightItems.push({...this.selected})
+      } else if (this.focusPosition === 'right') {
+        this.defaultItems.push({...this.selected})
+      }
+
+      /*if (this.rightItems.length < 6 && this.focusPosition === 'default') {
+        this.rightItems.push({...this.selected})
+      } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
+        this.defaultItems.push({...this.selected})
+      } else {
+        alert(this.alertMsg)
+      }*/
       this.clearFocus()
     },
     /**
@@ -121,9 +146,9 @@ export default {
       let item = prompt('Add Item');
 
       if (this.defaultItems.length < 6 && type === 'default') {
-          this.defaultItems.push({name: item, color: item});
+        this.defaultItems.push({name: item, color: item});
       } else if (this.rightItems.length < 6 && type === 'right') {
-          this.rightItems.push({name: item, color: item});
+        this.rightItems.push({name: item, color: item});
       } else {
         alert('Maximum of 6 items')
       }

@@ -3,8 +3,9 @@
     <ul class="actions">
       <li v-for="action in btnActions" :key="action">
         <button v-if="action === 'Move'" @click="toMove" class="actions btn btn-warning" :disabled="isDisabled">{{ action }}</button>
-        <button v-else-if="action === 'Copie'" @click="toCopie" class="actions btn btn-warning" :disabled="isDisabled">{{ action }}</button>
+        <button v-else-if="action === 'Copie'" @click="toCopy" class="actions btn btn-warning" :disabled="isDisabled">{{ action }}</button>
         <button v-else-if="action === 'Delete'" @click="toDelete" class="actions btn btn-warning" :disabled="isDisabled">{{ action }}</button>
+        <button v-else-if="action === 'Reference'" @click="toReference" class="actions btn btn-warning" :disabled="isDisabled">{{ action }}</button>
         <button v-else class="actions btn btn-warning" :disabled="isDisabled">{{ action }}</button>
       </li>
     </ul>
@@ -40,8 +41,15 @@ export default {
     /**
      *
      */
-    toCopie() {
-      this.$emit('toCopie')
+    toReference() {
+      this.$emit('toReference')
+    },
+
+    /**
+     *
+     */
+    toCopy() {
+      this.$emit('toCopy')
     },
     /**
      *

@@ -5,7 +5,7 @@
       <div class="col-4 item-group">
         <button class="add-btn" type="button" @click="addItem('default')">+</button>
         <ul class="item">
-          <li class="d-item" v-for="item in defaultItems" :key="item.color">
+          <li class="d-item" v-for="(item, index) in defaultItems" :key="item.color + index">
             <Item :color="item.name" :item="item" type="default"
                   @focusField="focusField"
                   @removeItem="removeItem"/>
@@ -23,7 +23,7 @@
       <div class="col-4 item-group">
         <button class="add-btn" type="button" @click="addItem('right')">+</button>
         <ul class="item">
-          <li class="d-item" v-for="item in rightItems" :key="item.color">
+          <li class="d-item" v-for="(item, index) in rightItems" :key="item.color + index">
             <Item :color="item.name" @focusField="focusField" :item="item" type="right"
                   @removeItem="removeItem"/>
           </li>
@@ -100,7 +100,7 @@ export default {
     },
 
     toCopy() {
-      if (this.rightItems.length > 6 || this.defaultItems.length > 6) {
+      /*if (this.rightItems.length > 6 || this.defaultItems.length > 6) {
         alert(this.alertMsg)
       }
 
@@ -108,17 +108,18 @@ export default {
         this.rightItems.push({...this.selected})
       } else if (this.focusPosition === 'right') {
         this.defaultItems.push({...this.selected})
-      }
+      }*/
 
-      /*if (this.rightItems.length < 6 && this.focusPosition === 'default') {
+      if (this.rightItems.length < 6 && this.focusPosition === 'default') {
         this.rightItems.push({...this.selected})
       } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
         this.defaultItems.push({...this.selected})
       } else {
         alert(this.alertMsg)
-      }*/
+      }
       this.clearFocus()
     },
+
     /**
      *
      */
@@ -128,6 +129,7 @@ export default {
           : this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
       this.clearFocus()
     },
+
     /**
      *
      * @param elt

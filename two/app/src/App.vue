@@ -49,6 +49,7 @@ export default {
         {name: 'Grey'},
       ],
       selected: {},
+      move: {},
       copied: [],
       focusPosition: '',
       isDisabled: true,
@@ -63,10 +64,14 @@ export default {
      */
     toMove() {
       if (this.rightItems.length < 6 && this.focusPosition === 'default') {
-        this.rightItems.push(this.selected)
+        this.rightItems.push(this.move)
+
+        //Reflect.deleteProperty(this.defaultItems, this.selected)
         this.defaultItems.splice(this.defaultItems.indexOf(this.selected), 1)
+        this.defaultItems = [...this.defaultItems]
       } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
-        this.defaultItems.push(this.selected)
+        this.defaultItems.push(this.move)
+        //Reflect.deleteProperty(this.rightItems, this.selected)
         this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
       } else {
         alert(this.alertMaxiItem)
@@ -79,6 +84,7 @@ export default {
      */
     clearFocus() {
       this.selected = null
+      this.move = null
       this.focusPosition = null
       this.isDisabled = true
     },
@@ -114,6 +120,7 @@ export default {
      */
     focusField(elt, type) {
       this.selected = elt;
+      this.move = {...elt};
       this.focusPosition = type
       this.isDisabled = false
     },
@@ -126,9 +133,9 @@ export default {
       let item = prompt('Add Item');
 
       if (this.defaultItems.length < 6 && type === 'default') {
-          this.defaultItems.push({name: item})
+        this.defaultItems.push({name: item})
       } else if (this.rightItems.length < 6 && type === 'right') {
-          this.rightItems.push({name: item});
+        this.rightItems.push({name: item});
       } else {
         alert(this.alertMaxiItem)
       }

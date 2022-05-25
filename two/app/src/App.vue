@@ -5,7 +5,7 @@
       <div class="col-4 item-group">
         <button class="add-btn" type="button" @click="addItem('default')">+</button>
         <ul class="item">
-          <li class="d-item" v-for="item in defaultItems" :key="item.color">
+          <li class="d-item" v-for="(item, index) in defaultItems" :key="index">
             <Item :color="item.name" :item="item" type="default"
                   @focusField="focusField"
                   @removeItem="removeItem"/>
@@ -13,12 +13,12 @@
         </ul>
       </div>
 
-      <Actions :item="selected" @toMove="toMove" @toCopie="toCopie" @toDelete="toDelete" :is-disabled="isDisabled"/>
+      <Actions :item="selected" @toMove="toMove" @toCopy="toCopy" @toDelete="toDelete" :is-disabled="isDisabled"/>
 
       <div class="col-4 item-group">
         <button class="add-btn" type="button" @click="addItem('right')">+</button>
         <ul class="item">
-          <li class="d-item" v-for="item in rightItems" :key="item.color">
+          <li class="d-item" v-for="(item, index) in rightItems" :key="index">
             <Item :color="item.name" @focusField="focusField" :item="item" type="right"
                   @removeItem="removeItem"/>
           </li>
@@ -40,22 +40,24 @@ export default {
   data() {
     return {
       defaultItems: [
-        {name: 'Blue', color: 'blue'},
-        {name: 'Orange', color: 'orange'},
-        {name: 'Green', color: 'green'},
-        {name: '#000000', color: '#000000'},
+        {name: 'Blue'},
+        {name: 'Orange'},
+        {name: 'Green'},
+        {name: '#000000'},
       ],
       rightItems: [
-        {name: 'Grey', color: 'grey'},
+        {name: 'Grey'},
       ],
       selected: {},
       copied: [],
       focusPosition: '',
-      isDisabled: true
+      isDisabled: true,
+      alertMaxiItem: 'Maximum of 6 items',
     }
   },
   components: {Item, Actions},
   methods: {
+
     /**
      *
      */
@@ -67,10 +69,11 @@ export default {
         this.defaultItems.push(this.selected)
         this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
       } else {
-        alert('Maximum of 6 items')
+        alert(this.alertMaxiItem)
       }
       this.clearFocus()
     },
+
     /**
      *
      */
@@ -79,21 +82,21 @@ export default {
       this.focusPosition = null
       this.isDisabled = true
     },
+
     /**
      *
      */
-    toCopie() {
-     // let copiedUser = Object.assign({}, this.selected);
-
+    toCopy() {
       if (this.rightItems.length < 6 && this.focusPosition === 'default') {
-        this.rightItems.push(this.selected)
+        this.rightItems.push(Object.assign({}, this.selected))
       } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
-        this.defaultItems.push(this.selected)
+        this.defaultItems.push(Object.assign({}, this.selected))
       } else {
-        alert('Maximum of 6 items')
+        alert(this.alertMaxiItem)
       }
       this.clearFocus()
     },
+
     /**
      *
      */
@@ -103,6 +106,7 @@ export default {
           : this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
       this.clearFocus()
     },
+
     /**
      *
      * @param elt
@@ -113,6 +117,7 @@ export default {
       this.focusPosition = type
       this.isDisabled = false
     },
+
     /**
      *
      * @param type
@@ -121,13 +126,14 @@ export default {
       let item = prompt('Add Item');
 
       if (this.defaultItems.length < 6 && type === 'default') {
-          this.defaultItems.push({name: item, color: item});
+          this.defaultItems.push({name: item})
       } else if (this.rightItems.length < 6 && type === 'right') {
-          this.rightItems.push({name: item, color: item});
+          this.rightItems.push({name: item});
       } else {
-        alert('Maximum of 6 items')
+        alert(this.alertMaxiItem)
       }
     },
+
     /**
      *
      * @param type

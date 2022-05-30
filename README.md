@@ -1,4 +1,4 @@
 # Test HEYTEAM
 
-* Javascript test is in **one** folder
-* vueJs test is in **two/app** folder
+* Javascript test => **one** folder
+* vueJs test => **two/app** folder

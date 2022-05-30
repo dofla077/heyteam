@@ -57,7 +57,7 @@ export default {
       copied: [],
       focusPosition: '',
       isDisabled: true,
-      alertMsg: 'Maximum of 6 items'
+      alertMessage: 'Maximum of 6 items'
     }
   },
   components: {Item, Actions},
@@ -73,7 +73,7 @@ export default {
         this.defaultItems.push(this.selected)
         this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
       } else {
-        alert('Maximum of 6 items')
+        alert(this.alertMessage)
       }
       this.clearFocus()
     },
@@ -94,28 +94,21 @@ export default {
       } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
         this.defaultItems.push(this.selected)
       } else {
-        alert('Maximum of 6 items')
+        alert(this.alertMessage)
       }
       this.clearFocus()
     },
 
+    /**
+     *
+     */
     toCopy() {
-      /*if (this.rightItems.length > 6 || this.defaultItems.length > 6) {
-        alert(this.alertMsg)
-      }
-
-      if (this.focusPosition === 'default') {
-        this.rightItems.push({...this.selected})
-      } else if (this.focusPosition === 'right') {
-        this.defaultItems.push({...this.selected})
-      }*/
-
       if (this.rightItems.length < 6 && this.focusPosition === 'default') {
         this.rightItems.push({...this.selected})
       } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
         this.defaultItems.push({...this.selected})
       } else {
-        alert(this.alertMsg)
+        alert(this.alertMessage)
       }
       this.clearFocus()
     },
@@ -152,7 +145,7 @@ export default {
       } else if (this.rightItems.length < 6 && type === 'right') {
         this.rightItems.push({name: item, color: item});
       } else {
-        alert('Maximum of 6 items')
+        alert(this.alertMessage)
       }
     },
     /**

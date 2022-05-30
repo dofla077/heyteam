@@ -10,43 +10,12 @@
   </div>
 </template>
 <script>
+
+import itemMixin from "@/mixins/itemMixin";
+
 export default {
   name: 'item',
-  props: {
-    color: {
-      type: String
-    },
-    item: {
-      type: Object
-    },
-    type: {
-      type: String,
-      default: 'default'
-    }
-  },
-  data() {
-    return {
-      localItem: this.item
-    }
-  },
-  methods: {
-    /**
-     *
-     * @param type
-     * @param elt
-     */
-    removeItem(type, elt) {
-      this.$emit('removeItem', type, elt)
-    },
-    /**
-     *
-     * @param item
-     * @param type
-     */
-    focusField(item, type) {
-      this.$emit('focusField', item, type)
-    }
-  }
+  mixins: [itemMixin]
 }
 </script>
 <style>

@@ -11,52 +11,13 @@
   </div>
 </template>
 <script>
+// mixins
+import actionsMixin from '@/mixins/actionsMixin'
+
 export default {
   name: 'actions',
-  props: {
-    item: {
-    },
-    isDisabled: {
-      type: Boolean
-    }
-  },
-  data() {
-    return {
-      btnActions: [
-        'Move',
-        'Delete',
-        'Copie',
-        'Reference',
-      ]
-    }
-  },
-  methods: {
-    /**
-     *
-     */
-    toMove() {
-      this.$emit('toMove')
-    },
-    /**
-     *
-     */
-    toReference() {
-      this.$emit('toReference')
-    },
+  mixins: [actionsMixin],
 
-    /**
-     *
-     */
-    toCopy() {
-      this.$emit('toCopy')
-    },
-    /**
-     *
-     */
-    toDelete() {
-      this.$emit('toDelete')
-    }
-  }
 }
 </script>
 <style>

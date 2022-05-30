@@ -3,7 +3,7 @@
     <div class="row">
 
       <div class="col-4 item-group">
-        <button class="add-btn" type="button" @click="addItem('default')">+</button>
+        <button class="add-btn" type="button" @click="toAdd('default')">+</button>
         <ul class="item">
           <li class="d-item" v-for="(item, index) in defaultItems" :key="item.color + index">
             <Item :color="item.name" :item="item" type="default"
@@ -13,15 +13,10 @@
         </ul>
       </div>
 
-      <Actions :item="selected"
-               @toMove="toMove"
-               @toCopy="toCopy"
-               @toReference="toReference"
-               @toDelete="toDelete"
-               :is-disabled="isDisabled"/>
+      <Actions @toMove="toMove" @toCopy="toCopy" @toReference="toReference" @toDelete="toDelete" :is-disabled="isDisabled"/>
 
       <div class="col-4 item-group">
-        <button class="add-btn" type="button" @click="addItem('right')">+</button>
+        <button class="add-btn" type="button" @click="toAdd('right')">+</button>
         <ul class="item">
           <li class="d-item" v-for="(item, index) in rightItems" :key="item.color + index">
             <Item :color="item.name" @focusField="focusField" :item="item" type="right"
@@ -36,130 +31,16 @@
 </template>
 
 <script>
-
-import Actions from "@/components/Actions";
-import Item from "@/components/Item";
+// components
+import Actions from '@/components/Actions'
+import Item from '@/components/Item'
+// mixins
+import indexMixin from '@/mixins/indexMixin'
 
 export default {
   name: 'App',
-  data() {
-    return {
-      defaultItems: [
-        {name: 'Blue', color: 'blue'},
-        {name: 'Orange', color: 'orange'},
-        {name: 'Green', color: 'green'},
-        {name: '#000000', color: '#000000'},
-      ],
-      rightItems: [
-        {name: 'Grey', color: 'grey'},
-      ],
-      selected: {},
-      copied: [],
-      focusPosition: '',
-      isDisabled: true,
-      alertMessage: 'Maximum of 6 items'
-    }
-  },
+  mixins: [indexMixin],
   components: {Item, Actions},
-  methods: {
-    /**
-     *
-     */
-    toMove() {
-      if (this.rightItems.length < 6 && this.focusPosition === 'default') {
-        this.rightItems.push(this.selected)
-        this.defaultItems.splice(this.defaultItems.indexOf(this.selected), 1)
-      } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
-        this.defaultItems.push(this.selected)
-        this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
-      } else {
-        alert(this.alertMessage)
-      }
-      this.clearFocus()
-    },
-    /**
-     *
-     */
-    clearFocus() {
-      this.selected = null
-      this.focusPosition = null
-      this.isDisabled = true
-    },
-    /**
-     *
-     */
-    toReference() {
-      if (this.rightItems.length < 6 && this.focusPosition === 'default') {
-        this.rightItems.push(this.selected)
-      } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
-        this.defaultItems.push(this.selected)
-      } else {
-        alert(this.alertMessage)
-      }
-      this.clearFocus()
-    },
-
-    /**
-     *
-     */
-    toCopy() {
-      if (this.rightItems.length < 6 && this.focusPosition === 'default') {
-        this.rightItems.push({...this.selected})
-      } else if (this.defaultItems.length < 6 && this.focusPosition === 'right') {
-        this.defaultItems.push({...this.selected})
-      } else {
-        alert(this.alertMessage)
-      }
-      this.clearFocus()
-    },
-
-    /**
-     *
-     */
-    toDelete() {
-      this.focusPosition === 'default'
-          ? this.defaultItems.splice(this.defaultItems.indexOf(this.selected), 1)
-          : this.rightItems.splice(this.rightItems.indexOf(this.selected), 1)
-      this.clearFocus()
-    },
-
-    /**
-     *
-     * @param elt
-     * @param type
-     */
-    focusField(elt, type) {
-      this.selected = elt;
-      this.focusPosition = type
-      this.isDisabled = false
-    },
-    /**
-     *
-     * @param type
-     */
-    addItem(type) {
-      let item = prompt('Add Item');
-
-      if (this.defaultItems.length < 6 && type === 'default') {
-        this.defaultItems.push({name: item, color: item});
-      } else if (this.rightItems.length < 6 && type === 'right') {
-        this.rightItems.push({name: item, color: item});
-      } else {
-        alert(this.alertMessage)
-      }
-    },
-    /**
-     *
-     * @param type
-     * @param elt
-     */
-    removeItem(type, elt) {
-      type === 'default'
-          ? this.defaultItems.splice(this.defaultItems.indexOf(elt), 1)
-          : this.rightItems.splice(this.rightItems.indexOf(elt), 1);
-      this.clearFocus()
-    }
-  }
 }
 </script>
 

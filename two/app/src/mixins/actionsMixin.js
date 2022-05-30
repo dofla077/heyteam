@@ -1,9 +1,5 @@
 export default {
   props: {
-    /*item: {
-      type: Object,
-      default: null
-    },*/
     isDisabled: {
       type: Boolean,
       default: true
@@ -20,28 +16,31 @@ export default {
     }
   },
   methods: {
+
     /**
-     *
-     */
+         * Move
+         */
     toMove() {
       this.$emit('toMove')
     },
+
     /**
-     *
-     */
+         * copy by reference
+         */
     toReference() {
       this.$emit('toReference')
     },
 
     /**
-     *
-     */
+         * copy
+         */
     toCopy() {
       this.$emit('toCopy')
     },
+
     /**
-     *
-     */
+         * delete
+         */
     toDelete() {
       this.$emit('toDelete')
     }
